@@ -1,11 +1,6 @@
 ## Required packages
 library(pROC)
-library(tidyr)
 library(dplyr)
-library(ggplot2)
-library(magrittr)
-library(ggpubr)
-library(tidypaleo)
 
 
 ## Solve cubic equation: excast
@@ -110,39 +105,6 @@ run_sims <- function(p0 = 0.5,    # outcome risk in development population
     return(res)
   }
   
-  ggp_Creator <- function(data, p0, delta, AUC_max = 0.95, y_lim = NULL) {
-    
-    data_temp <- data[data$p0 == p0 & data$Delta == delta & !is.na(data$AUC) &
-                        data$AUC <= AUC_max, ]
-    data_temp %<>%
-      filter((Method == "Exact adjustment" & Var_sim > 0.0019 & p0 == 0.1) |
-               (Method == "Exact adjustment" & Var_sim > 0.0039 & p0 == 0.25) |
-               (Method == "Exact adjustment" & Var_sim > 0.0052 & p0 == 0.50) |
-               (Method != "Exact adjustment"))
-    
-    data_temp$AUC_Dlag <- data_temp$AUC - lag(data_temp$AUC)
-    data_temp$AUC_Dlag[is.na(data_temp$AUC_Dlag)] <- 0
-    data_temp <- data_temp[data_temp$AUC_Dlag >= 0 , ]
-    
-    model_temp <- age_depth_model(
-      depth = data_temp$AUC,
-      age = data_temp$Var_sim)
-    
-    ggp_temp <- ggplot(data = data_temp,
-                       aes(x = Var_sim, y = p_error, group = Method, color = Method)) +
-      geom_line() +
-      labs(x = "Var", y = "Relative bias (%)") +
-      theme_bw() +
-      theme(legend.position = "bottom", text = element_text(size = 15, face = "bold"),
-            axis.text.x.top = element_text(size = 8, face = "bold", angle = 0),
-            axis.text.x.bottom = element_text(size = 11, face = "bold")) +
-      facet_wrap(~ p0_lab + p1_lab, labeller = label_wrap_gen(multi_line = FALSE)) +
-      scale_x_age_depth(model_temp, depth_name = "AUC")
-    if (! is.null(y_lim)) ggp_temp <- ggp_temp + lims(y = y_lim)
-    
-    return(ggp_temp)
-  }
-  
   
   
   #### Simulation study
@@ -178,7 +140,7 @@ run_sims <- function(p0 = 0.5,    # outcome risk in development population
   simRes_long$p1_lab <- paste0("Delta=", simRes_long$Delta, "%")
   
   
-  return(ggp_Creator(data = simRes_long, p0 = p0, delta = delta))
+  return(list(data = simRes_long, p0 = p0, delta = delta))
   
 }
 
