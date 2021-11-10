@@ -178,7 +178,7 @@ run_sims <- function(p0 = 0.5,    # outcome risk in development population
   simRes_long$p1_lab <- paste0("Delta=", simRes_long$Delta, "%")
   
   
-  return(list(data = simRes_long, p0 = p0, delta = delta))
+  return(ggp_Creator(data = simRes_long, p0 = p0, delta = delta))
   
 }
 
