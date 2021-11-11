@@ -3,7 +3,7 @@ library(pROC)
 library(dplyr)
 
 
-## Solve cubic equation: excast
+## Solves cubic equation
 odds_adjust <- function(p0, p1, v)
 {
   
@@ -23,7 +23,7 @@ odds_adjust <- function(p0, p1, v)
   }
 }
 
-## Solve cubic equation: numerical
+## Solves cubic equation: numerical
 odds_adjust_numerical <- function (p0, p1, v)
 {
   f <- function(x,p0,p1,v)
