@@ -7,8 +7,7 @@ library(magrittr)
 library(ggpubr)
 library(tidypaleo)
 
-
-## Solve cubic equation: excast
+## Solves cubic equation
 odds_adjust <- function(p0, p1, v)
 {
   
